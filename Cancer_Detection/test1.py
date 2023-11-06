@@ -22,6 +22,9 @@ from sklearn.mixture import GaussianMixture
 from sklearn.covariance import EllipticEnvelope
 from sklearn.model_selection import GridSearchCV
 
+import os, sys, pickle
+import argparse, sys
+
 import seaborn as sns
 sns.set_style('white')
 
@@ -30,23 +33,26 @@ warnings.filterwarnings('ignore')
 
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-label', help=' : Please set the label') 
+args = parser.parse_args()
 
 
+df = pd.read_csv('data/modified_dataset.csv')
 
-df = pd.read_csv('data/preprocessed.csv')
-
-
+df_stroke_0 = df[df['Cancer'] == 0]
+df_stroke_1 = df[df['Cancer'] == 1]
 
 
 
 #train, test data processing 1,2,3,4중 선택
 
 #1.정상으로만 학습, 테스트는 정상과 이상 반반
-answer_label = 'stroke'
+answer_label = args.label
 X = df[df.columns.difference([answer_label])]
 df_normal = df[df[answer_label] == 0]
 df_abnormal = df[df[answer_label] == 1]
-test_normal_df = df_normal.sample(n=420, random_state = 0)
+test_normal_df = df_normal.sample(n=len(df_stroke_1), random_state = 0)
 test_df = pd.concat([df_abnormal, test_normal_df])
 X_test = test_df[test_df.columns.difference([answer_label])]
 y_test = test_df[answer_label]
