@@ -38,16 +38,13 @@ df = pd.read_csv('data/preprocessed.csv')
 
 
 
+#train, test data processing 1,2,3,4중 선택
 
-#train, test data processing
+#1.정상으로만 학습, 테스트는 정상과 이상 반반
 answer_label = 'stroke'
 X = df[df.columns.difference([answer_label])]
-
 df_normal = df[df[answer_label] == 0]
 df_abnormal = df[df[answer_label] == 1]
-
-
-
 test_normal_df = df_normal.sample(n=420, random_state = 0)
 test_df = pd.concat([df_abnormal, test_normal_df])
 X_test = test_df[test_df.columns.difference([answer_label])]
@@ -57,9 +54,26 @@ X_train = train_df[train_df.columns.difference([answer_label])]
 y_train = train_df[answer_label]
 
 
+#2.그냥 데이터 이용
+# X = df.drop('stroke',axis=1)
+# y = df['stroke']
+# X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=1)
 
 
+#3.Oversampling by Smote
+# overs = SMOTE(random_state=1)
+# X = df.drop('stroke',axis=1)
+# y = df['stroke']
+# X_os, y_os = overs.fit_resample(X,y)
+# X_train,X_test,y_train,y_test = train_test_split(X_os,y_os,test_size=0.3,random_state=1)
 
+
+#4.Undersampling by OSS
+# X = df.drop('stroke',axis=1)
+# y = df['stroke']
+# unders = OneSidedSelection(n_neighbors=1, n_seeds_S=1)
+# X_us,y_us = unders.fit_resample(X,y)
+# X_train,X_test,y_train,y_test = train_test_split(X_us,y_us,test_size=0.3,random_state=1)
 
 
 
