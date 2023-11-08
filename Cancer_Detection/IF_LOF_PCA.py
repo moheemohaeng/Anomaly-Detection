@@ -40,6 +40,26 @@ args = parser.parse_args()
 
 df = pd.read_csv('data/modified_dataset.csv')
 
+
+# def remove_outliers(df, column_name, factor=1.5):
+#     Q1 = df[column_name].quantile(0.25)
+#     Q3 = df[column_name].quantile(0.75)
+#     IQR = Q3 - Q1
+#     lower_bound = Q1 - factor * IQR
+#     upper_bound = Q3 + factor * IQR
+#     df_filtered = df[(df[column_name] >= lower_bound) & (df[column_name] <= upper_bound)]
+#     return df_filtered
+
+# # 모든 칼럼에 대해 이상치 제거 실행
+# for column_name in df.columns:
+#     df = remove_outliers(df, column_name)
+
+
+
+
+
+
+
 df_stroke_0 = df[df['Cancer'] == 0]
 df_stroke_1 = df[df['Cancer'] == 1]
 
@@ -106,7 +126,7 @@ print("===========================================")
 
 
 # Local Outlier Factor
-LOF = LocalOutlierFactor(contamination=0.01,novelty=True)
+LOF = LocalOutlierFactor(contamination=0.35,novelty=True)
 LOF.fit(X_train)
 LOF_test_pred = LOF.predict(X_test) 
 LOF_test_pred = pd.DataFrame(LOF_test_pred)
@@ -118,6 +138,7 @@ print("recall: ", round(recall_score(y_test, LOF_test_pred),3))
 print("precision: ", round(precision_score(y_test, LOF_test_pred),3))
 print("f1-score: ", round(f1_score(y_test, LOF_test_pred),3))
 print("===========================================")
+
 
 
 
