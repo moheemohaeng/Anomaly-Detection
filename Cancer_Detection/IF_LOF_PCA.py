@@ -16,7 +16,7 @@ from imblearn.under_sampling import OneSidedSelection
 import os
 from sklearn.neighbors import LocalOutlierFactor
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
+# from sklearn.decomposition import PCA
 from pyod.models.pca import PCA
 from sklearn.mixture import GaussianMixture
 from sklearn.covariance import EllipticEnvelope
@@ -111,7 +111,7 @@ y_train = train_df[answer_label]
 
 
 # Isolation Forest
-Iforest = IForest()
+Iforest = IForest(contamination=0.25)
 Iforest.fit(X_train) 
 IForest_test_pred = Iforest.predict(X_test)
 
@@ -126,7 +126,7 @@ print("===========================================")
 
 
 # Local Outlier Factor
-LOF = LocalOutlierFactor(contamination=0.35,novelty=True)
+LOF = LocalOutlierFactor(contamination=0.29,novelty=True)
 LOF.fit(X_train)
 LOF_test_pred = LOF.predict(X_test) 
 LOF_test_pred = pd.DataFrame(LOF_test_pred)

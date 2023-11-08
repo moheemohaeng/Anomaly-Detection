@@ -33,6 +33,8 @@ warnings.filterwarnings('ignore')
 
 
 
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-label', help=' : Please set the label') 
 args = parser.parse_args()
@@ -40,8 +42,11 @@ args = parser.parse_args()
 
 df = pd.read_csv('data/modified_dataset.csv')
 
+
 df_stroke_0 = df[df['Cancer'] == 0]
 df_stroke_1 = df[df['Cancer'] == 1]
+
+
 
 
 
@@ -62,8 +67,34 @@ y_train = train_df[answer_label]
 
 
 
+
+
+from pyod.models.hbos import HBOS
+from pyod.utils.data import generate_data
+
+model = HBOS(contamination=0.15)
+model.fit(X_train)
+
+# 이상치 점수 계산
+y_scores = model.decision_function(X_test)
+
+# 이상치 예측
+y_pred = model.predict(X_test)
+
+print("++++++++++++++++++++HBOS+++++++++++++++++++")
+print("accuracy: ", accuracy_score(y_test, y_pred))
+print("recall: ", round(recall_score(y_test, y_pred),3))
+print("precision: ", round(precision_score(y_test, y_pred),3))
+print("f1-score: ", round(f1_score(y_test, y_pred),3))
+print("===========================================")
+
+
+
+
+
+
 from sklearn.svm import OneClassSVM
-OCSVM = OneClassSVM(kernel='rbf', nu = 0.5, verbose = True)
+OCSVM = OneClassSVM(kernel='sigmoid', nu = 0.35, verbose = True)
 OCSVM.fit(X_train)
 
 OCSVM_train_pred = OCSVM.predict(X_train)
@@ -77,3 +108,5 @@ print("recall: ", round(recall_score(y_test, OCSVM_test_pred),3))
 print("precision: ", round(precision_score(y_test, OCSVM_test_pred),3))
 print("f1-score: ", round(f1_score(y_test, OCSVM_test_pred),3))
 print("===========================================")
+
+
